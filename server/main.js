@@ -7,4 +7,20 @@ let server = express()
 
 server.use(bp.json())
 
-import GalaxiesController from 
+import GalaxiesController from './controllers/GalaxiesController'
+import SunsController from './controllers/SunsController'
+import PlanetsController from './controllers/PlanetsController'
+import MoonsController from './controllers/MoonsController'
+
+server.use('/api/galaxies', new GalaxiesController().router)
+server.use('/api/suns', new SunsController().router)
+server.use('/api/planets', new PlanetsController().router)
+server.use('/api/moons', new MoonsController().router)
+
+server.use((error, req, res, next) => {
+  res.status(error.status || 400).send(error)
+})
+
+server.listen(port, () => {
+  console.log('Your server is running on port: ', port)
+})
