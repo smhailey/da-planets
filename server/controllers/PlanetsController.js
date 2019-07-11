@@ -3,31 +3,51 @@ import _planetsService from '../services/PlanetsServices'
 
 export default class PlanetsController {
 
-  async createPlanet(req, res, next) {
+  async getAllPlanets(req, res, next) {
     try {
-      let planet = await _planetsService.create(req.body)
-      res.send(planet)
-    } catch (err) { next(err) }
+      let planets = await _planetsService.find()
+      res.send(planets)
+    } catch (error) { next(error) }
   }
 
   async getPlanet(req, res, next) {
     try {
-      let planet = await _planetsService.findById(req.params.planetId)
+      let planet = await _planetsService.findById(req.params.PlanetId)
+      if (!planet) {
+        return res.status(400).send("This is not the Planet you are looking for...")
+      }
       res.send(planet)
-    } catch (err) { next(err) }
+    } catch (error) { next(error) }
   }
 
-  async getAllPlanets(req, res, next) {
+  async createPlanet(req, res, next) {
     try {
-      let planet = await _planetsService.find()
+      let planet = await _planetsService.create(req.body)
       res.send(planet)
-    } catch (err) { next(err) }
+    } catch (error) { next(error) }
+  }
+
+  async editPlanet(req, res, next) {
+    try {
+      let editedPlanet = await _planetsService.findByIdAndUpdate(req.params.planetId, req.body, { new: true })
+      res.send(editedPlanet)
+    } catch (error) { next(error) }
+  }
+
+  async destroyPlanet(res, req, next) {
+    try {
+      let deathOfPlanet = await _planetsService.findByIdAndDelete(req.params.planetId)
+      res.send("Planet Delorted")
+    } catch (error) { next(error) }
   }
 
   constructor() {
     this.router = express.Router()
+      //FIXME  remove "this.getAllPlanets" for production
       .get('', this.getAllPlanets)
-      .get(':/planetId', this.getPlanet)
+      .get('/:planetId', this.getPlanet)
       .post('', this.createPlanet)
+      .put('/:planetId', this.editPlanet)
+      .delete('/:planetId', this.destroyPlanet)
   }
 }

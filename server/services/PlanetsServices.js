@@ -1,10 +1,11 @@
 import mongoose from 'mongoose'
+
 let ObjectId = mongoose.Schema.Types.ObjectId
 
 let _schema = new mongoose.Schema({
-  name: { type: String, required: true },
-  //NOTE one-to-many, one planet has many moons???????????????????????
-  // moons: [{ type: ObjectId, ref: 'Moon' }],
+  //NOTE "unique" and "lowercase" modifiers are IMPORTANT
+  name: { type: String, required: true, unique: true, lowercase: true },
+  star: { type: ObjectId, ref: 'Star', required: true }
 }, { timestamps: true })
 
 export default mongoose.model('Planet', _schema)
