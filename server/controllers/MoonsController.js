@@ -19,7 +19,7 @@ export default class MoonsController {
 
   async getAllMoons(req, res, next) {
     try {
-      let moon = await _moonsService.create(req.body)
+      let moon = await _moonsService.find()
       res.send(moon)
     } catch (err) { next(err) }
   }

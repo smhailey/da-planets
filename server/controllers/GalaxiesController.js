@@ -2,18 +2,6 @@ import express from 'express'
 import _galaxiesService from '../services/GalaxiesServices'
 
 export default class GalaxiesController {
-  async addSun(req, res, next) {
-    try {
-      let galaxy = await _galaxiesService.findById(req.params.galaxyId)
-      galaxy.suns.push(req.body.sunId)
-      await galaxy.save(err => {
-        if (err) {
-          next(err)
-        }
-      })
-      res.send(galaxy)
-    } catch (err) { next(err) }
-  }
 
   async createGalaxy(req, res, next) {
     try {
@@ -24,14 +12,14 @@ export default class GalaxiesController {
 
   async getGalaxy(req, res, next) {
     try {
-      let galaxy = await _galaxiesService.findById(req.params.galaxyId).populate('suns')
+      let galaxy = await _galaxiesService.findById(req.params.galaxyId)
       res.send(galaxy)
     } catch (err) { next(err) }
   }
 
   async getAllGalaxies(req, res, next) {
     try {
-      let galaxy = await _galaxiesService.create(req.body)
+      let galaxy = await _galaxiesService.find()
       res.send(galaxy)
     } catch (err) { next(err) }
   }
@@ -41,9 +29,5 @@ export default class GalaxiesController {
       .get('', this.getAllGalaxies)
       .get(':/galaxyId', this.getGalaxy)
       .post('', this.createGalaxy)
-      .put(':/galaxyId/suns/', this.addSun)
   }
-
-
-
 }
