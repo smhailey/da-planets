@@ -1,25 +1,25 @@
 import express from 'express'
-import _galaxiesService from '../services/GalaxiesServices'
+import _galaxyService from '../services/GalaxiesServices'
+import _starService from '../services/StarsServices'
 
 export default class GalaxiesController {
 
-  async createGalaxy(req, res, next) {
-    try {
-      let galaxy = await _galaxiesService.create(req.body)
-      res.send(galaxy)
-    } catch (err) { next(err) }
-  }
-
-  async getGalaxy(req, res, next) {
-    try {
-      let galaxy = await _galaxiesService.findById(req.params.galaxyId)
-      res.send(galaxy)
-    } catch (err) { next(err) }
-  }
-
   async getAllGalaxies(req, res, next) {
     try {
-      let galaxy = await _galaxiesService.find()
+      let galaxies = await _galaxyService.find()
+      res.send(galaxies)
+    } catch (err) { next(err) }
+  }
+
+  async getOneGalaxyWithStars(req, res, next) {
+    try {
+      let stars = await _starService.find({ galaxy: req.params.galaxyId })
+    } catch (err) { next(err) }
+  }
+
+  async createGalaxy(req, res, next) {
+    try {
+      let galaxy = await _galaxyService.create(req.body)
       res.send(galaxy)
     } catch (err) { next(err) }
   }
@@ -27,7 +27,7 @@ export default class GalaxiesController {
   constructor() {
     this.router = express.Router()
       .get('', this.getAllGalaxies)
-      .get(':/galaxyId', this.getGalaxy)
+      .get('/:galaxyId/stars', this.getOneGalaxyWithStars)
       .post('', this.createGalaxy)
   }
 }
