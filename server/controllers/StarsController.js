@@ -42,7 +42,7 @@ export default class StarsController {
     } catch (err) { next(err) }
   }
 
-  async deleteStar(req, res, next) {
+  async destroyStar(req, res, next) {
     try {
       let deletedStar = await _starService.findByIdAndDelete(req.params.starId)
       res.send("Star Delorted")
@@ -57,6 +57,6 @@ export default class StarsController {
       .get('/:starId/planets', this.getPlanetsByStar)
       .post('', this.createStar)
       .put('/:starId', this.editStar)
-      .delete('/:starId', this.deleteStar)
+      .delete('/:starId', this.destroyStar)
   }
 }

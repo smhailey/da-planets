@@ -1,5 +1,6 @@
 import express from 'express'
 import _planetsService from '../services/PlanetsServices'
+import _moonService from '../services/MoonsServices'
 
 export default class PlanetsController {
 
@@ -17,6 +18,15 @@ export default class PlanetsController {
         return res.status(400).send("This is not the Planet you are looking for...")
       }
       res.send(planet)
+    } catch (error) { next(error) }
+  }
+
+  async getMoonsByPlanet(req, res, next) {
+    try {
+      let moons = await _moonService.find({
+        planet: req.params.planetId
+      })
+      res.send(moons)
     } catch (error) { next(error) }
   }
 
@@ -46,6 +56,7 @@ export default class PlanetsController {
       //FIXME  remove "this.getAllPlanets" for production
       .get('', this.getAllPlanets)
       .get('/:planetId', this.getPlanet)
+      .get('/:planetId/moons', this.getMoonsByPlanet)
       .post('', this.createPlanet)
       .put('/:planetId', this.editPlanet)
       .delete('/:planetId', this.destroyPlanet)
