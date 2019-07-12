@@ -13,7 +13,10 @@ export default class GalaxiesController {
 
   async getOneGalaxyWithStars(req, res, next) {
     try {
-      let stars = await _starService.find({ galaxy: req.params.galaxyId })
+      let galaxy = await _galaxyService.findById(req.params.galaxyId)
+      // @ts-ignore
+      galaxy.stars = await _starService.find({ galaxy: req.params.galaxyId })
+      res.send(galaxy)
     } catch (err) { next(err) }
   }
 
